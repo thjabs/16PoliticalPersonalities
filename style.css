@@ -1,6 +1,6 @@
 /* =========================
-   style.css — komplette Version
-   (Basisstyles + Mobile-Fixes für Fragenblöcke)
+   style.css — komplett (aktualisiert)
+   Enthält: Desktop-Basis + Mobile-Grid-Fix für die Quiz-Fragen
    ========================= */
 
 /* Basis-Layout */
@@ -98,6 +98,7 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  background: transparent;
 }
 .q-text {
   font-weight: 600;
@@ -112,7 +113,7 @@ h2 {
   padding-bottom: 6px;
 }
 
-/* the option row */
+/* the option row (desktop default: inline flex with left/options/right) */
 .scale-row {
   display: flex;
   align-items: center;
@@ -187,7 +188,7 @@ h2 {
   justify-content: center;
   margin-top: 8px;
 }
-/* responsive image styling (angepasst - du kannst Werte ändern) */
+/* responsive image styling (angepasst) */
 .profile-image img {
   max-width: 360px;
   width: 100%;
@@ -252,161 +253,30 @@ h2 {
 }
 
 /* --------------------------------------------------
-   Responsive-Fixes: nur für die Quiz/Fragen-Bereiche
-   Wir greifen gezielt nur bei Sektionen an, deren id mit "quiz" beginnt.
-   Dadurch bleiben Intro- und Ergebnis-Seite unverändert.
+   Desktop / Tablet: bisherige Regeln bleiben aktiv.
+   Mobile-Fix (weiter unten) überschreibt nur kleine Viewports.
    -------------------------------------------------- */
 
+/* -----------------------------
+   MOBILE: Quiz-Fix mit CSS Grid
+   Ziel:
+   - Frage normal oben
+   - darunter: zentrierte Kreise (alle 7 sichtbar)
+   - darunter: beide Rand-Notizen in einer Zeile (links/rechts)
+   - äußere Kreise nur leicht größer, ohne das Layout zu sprengen
+   ----------------------------- */
+
 @media (max-width: 640px) {
-  /* Reduziere Innenabstand in den Quiz-Karten etwas */
-  section[id^="quiz"] .screen,
-  section[id^="quiz"] {
-    padding: 16px;
-    box-sizing: border-box;
-  }
-
-  /* Fragen kompakter und lesbarer machen */
-  section[id^="quiz"] .question {
-    padding: 10px;
-    gap: 8px;
-  }
-
-  /* Frage-Text: kleiner, besser umbrechend */
-  section[id^="quiz"] .q-text {
-    font-size: 1rem;
-    line-height: 1.35;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    hyphens: auto;
-  }
-
-  /*
-    Likert-Row: erlaubt Umbruch und zentriert die Elemente.
-    Wichtig: die left/right labels sitzen jetzt neben der Skala und müssen
-    auf kleinen Bildschirmen weniger Platz einnehmen.
-  */
-  section[id^="quiz"] .scale-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap; /* Erlaubt Umbruch der Optionen auf mehrere Zeilen */
-  }
-
-  /* Labels links/rechts: kleiner, mehrbreitiger, umbrechbar */
-  section[id^="quiz"] .scale-left-label,
-  section[id^="quiz"] .scale-right-label {
-    width: auto; /* flexibel */
-    max-width: 36%;
-    text-align: center;
-    font-size: 0.88rem;
-    color: var(--muted);
-    white-space: normal;
-    word-break: break-word;
-  }
-
-  /* Optionscontainer: erlaubt Umbruch */
-  section[id^="quiz"] .options {
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    max-width: 100%;
-  }
-
-  /* Kreise: Wir begrenzen die max-width / max-height, damit Inline-Styles
-     vom JS nicht zu groß wirken auf kleinen Displays.
-     max-width / max-height beeinflussen sogar Inline width/height durch CSS constraints. */
-  section[id^="quiz"] .option {
-    /* Verbessert Touch-Bedienbarkeit durch Mindestgröße, aber verhindert zu große Kreise */
-    min-width: 28px;
-    min-height: 28px;
-    max-width: 48px; /* Kappe die Breite */
-    max-height: 48px; /* Kappe die Höhe */
-    width: auto !important; /* erlaubt max-width Anwendung */
-    height: auto !important;
-    margin: 4px;
-    border-width: 2px;
-  }
-
-  /* Falls du die Radius-Stufen mit transform verwendest, reduzieren wir die Extreme */
-  section[id^="quiz"] .option:first-child,
-  section[id^="quiz"] .option:last-child {
-    transform: scale(1.35);
-  }
-  section[id^="quiz"] .option:nth-child(2),
-  section[id^="quiz"] .option:nth-last-child(2) {
-    transform: scale(1.15);
-  }
-  section[id^="quiz"] .option:nth-child(3),
-  section[id^="quiz"] .option:nth-last-child(3) {
-    transform: scale(1.05);
-  }
-
-  /* Labels unterhalb der Skala (link/rechts) - falls zusätzlich benötigt */
-  section[id^="quiz"] .scale-labels-question {
-    display: none; /* wir nutzen nur die neben der Skala stehenden Labels */
-  }
-
-  /* Aktionen/Buttons: Platzsparender, nebeneinander aber responsiv */
-  section[id^="quiz"] .actions {
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  section[id^="quiz"] .actions .btn {
-    min-width: 100px;
-    padding: 10px 12px;
-  }
-}
-
-/* Extra small screens: nochmals feinjustieren */
-@media (max-width: 400px) {
-  section[id^="quiz"] .q-text {
-    font-size: 0.95rem;
-  }
-  section[id^="quiz"] .scale-left-label,
-  section[id^="quiz"] .scale-right-label {
-    font-size: 0.82rem;
-    max-width: 44%;
-  }
-  section[id^="quiz"] .option {
-    max-width: 42px;
-    max-height: 42px;
-    min-width: 26px;
-    min-height: 26px;
-  }
-}
-
-/* Optional: größere Displays — leicht größere Kreise erlauben */
-@media (min-width: 1200px) {
-  .profile-image img {
-    max-width: 480px;
-  }
-  .option {
-    /* Desktop: Inline Styles from JS bestimmen Größe — hier nur ein maximalwert */
-    max-width: 80px;
-    max-height: 80px;
-  }
-}
-
-/* Ende der Datei */
-/* ---------------------------
-   Mobile-fix (ersetzt/ergänzt)
-   GILT NUR für Quiz-Sektionen
-   --------------------------- */
-@media (max-width: 640px) {
-  /* kompaktere Karten */
+  /* Container & Karten in Quiz-Bereichen kompakter machen */
   section[id^="quiz"] {
     padding: 14px;
     box-sizing: border-box;
   }
   section[id^="quiz"] .question {
-    padding: 10px;
+    padding: 12px;
     gap: 8px;
-    overflow: visible; /* wir kontrollieren Größen, clipping vermeiden */
+    overflow: visible;
   }
-
-  /* Frage-Text: sicher umbrechen */
   section[id^="quiz"] .q-text {
     font-size: 1rem;
     line-height: 1.35;
@@ -415,58 +285,89 @@ h2 {
     hyphens: auto;
   }
 
-  /* Skalareihe: drei Spalten (links / mitte / rechts) in Prozent aufteilen */
+  /* ---- Grid-Aufbau für die Skala ----
+     Desktop: .scale-row war flex (left / options / right)
+     Mobile: wir machen .scale-row zu grid:
+       - erste Row: Optionen (zentrisch)
+       - zweite Row: Beschriftungen (beide Labels in derselben Grid-Area)
+     Dadurch können die beiden Labels nebeneinander unter den Kreisen stehen,
+     ohne das HTML ändern zu müssen.
+  */
   section[id^="quiz"] .scale-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Platzverteilung sauber */
+    display: grid;
+    grid-template-columns: 1fr; /* eine Spalte (alles gestapelt) */
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "options"
+      "labels";
     gap: 8px;
-    flex-wrap: nowrap;
+    align-items: center;
+    justify-items: center;
   }
 
-  /* Labels links/rechts: feste Basis, umbrechbar */
+  /* Desktop-Left/Right werden für Desktop-View weiterhin unterstützt,
+     damit die gleiche HTML-Struktur auch auf Tablet/Desktop funktioniert.
+     Hier geben wir zunächst die grid-areas (für Desktop, bleiben unbenutzt).
+  */
+  section[id^="quiz"] .scale-left-label {
+    grid-area: left;
+  }
+  section[id^="quiz"] .options {
+    grid-area: options;
+  }
+  section[id^="quiz"] .scale-right-label {
+    grid-area: right;
+  }
+
+  /* Für Mobile setzen wir die beiden Label-Elemente in dieselbe Grid-Area ('labels')
+     so dass ihr Inhalt nebeneinander dargestellt werden kann. */
   section[id^="quiz"] .scale-left-label,
   section[id^="quiz"] .scale-right-label {
-    flex: 0 0 18%; /* jeweils 18% der Breite */
-    max-width: 18%;
-    text-align: center;
-    font-size: 0.86rem;
+    grid-area: labels; /* beide teilen sich die Labels-Zeile */
+    display: inline-block; /* damit sie nebeneinander angezeigt werden können */
+    width: 50%; /* jeweils 50% der Breite */
+    box-sizing: border-box;
+    text-align: left;
+    font-size: 0.9rem;
     color: var(--muted);
-    white-space: normal;
+    vertical-align: middle;
+    padding: 4px 6px;
     word-break: break-word;
   }
-
-  /* Options: darf den verbleibenden Platz einnehmen, aber nicht mehr */
-  section[id^="quiz"] .options {
-    flex: 1 1 64%; /* nimmt ca. 64% der Zeile ein */
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-    max-width: 64%;
+  /* Rechts-Label rechtsbündig */
+  section[id^="quiz"] .scale-right-label {
+    text-align: right;
   }
 
-  /* KLARE KAPPUNG der Option-Größen (überschreibt inline width/height) */
-  /* Wir setzen eine responsive feste Größe via clamp() + !important, damit JS-Styles nicht ausreißen */
+  /* Options: zentriert, erlaubt Umbruch (falls nötig) */
+  section[id^="quiz"] .options {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap; /* falls nicht genug Platz in einer Reihe */
+    align-items: center;
+    max-width: 100%;
+  }
+
+  /* Feste, responsive Größe der Kreise (überschreibt inline styles vom JS)
+     clamp(min, preferred, max) sorgt für sauberes Skalieren */
   section[id^="quiz"] .option {
     box-sizing: border-box;
     flex: 0 0 auto;
-    min-width: 26px;
-    min-height: 26px;
-    /* clamp(min, preferred, max) sorgt für saubere Skalierung auf verschiedenen Geräten */
-    width: clamp(30px, 8vw, 44px) !important;
-    height: clamp(30px, 8vw, 44px) !important;
-    max-width: 44px !important;
-    max-height: 44px !important;
-    margin: 4px;
+    min-width: 28px;
+    min-height: 28px;
+    width: clamp(30px, 8.2vw, 46px) !important;
+    height: clamp(30px, 8.2vw, 46px) !important;
+    max-width: 46px !important;
+    max-height: 46px !important;
+    margin: 6px;
     border-width: 2px;
   }
 
-  /* Reduziere die zusätzlichen Skalen-Vergrößerungen am Rand, damit nichts übersteht */
+  /* Äußere Kreise leicht größer als mittlere, aber moderat */
   section[id^="quiz"] .option:first-child,
   section[id^="quiz"] .option:last-child {
-    transform: scale(1.18); /* moderat größer */
+    transform: scale(1.18);
     transform-origin: center;
   }
   section[id^="quiz"] .option:nth-child(2),
@@ -480,12 +381,13 @@ h2 {
     transform-origin: center;
   }
 
-  /* Falls du zusätzlich das untere Label-Element hattest: verstecken wir es (Dubletten) */
+  /* Falls eine zusätzliche, untere Label-Box existiert, verbergen wir sie
+     (du nutzt jetzt die seitlichen Labels, die wir weiter unten unter die Skala gesetzt haben) */
   section[id^="quiz"] .scale-labels-question {
     display: none;
   }
 
-  /* Buttons responsive */
+  /* Buttons */
   section[id^="quiz"] .actions {
     justify-content: center;
     gap: 10px;
@@ -505,16 +407,29 @@ h2 {
   section[id^="quiz"] .scale-left-label,
   section[id^="quiz"] .scale-right-label {
     font-size: 0.82rem;
-    max-width: 42%;
   }
   section[id^="quiz"] .option {
-    width: clamp(28px, 10vw, 40px) !important;
-    height: clamp(28px, 10vw, 40px) !important;
-    max-width: 40px !important;
-    max-height: 40px !important;
+    width: clamp(28px, 10vw, 42px) !important;
+    height: clamp(28px, 10vw, 42px) !important;
+    max-width: 42px !important;
+    max-height: 42px !important;
   }
   section[id^="quiz"] .option:first-child,
   section[id^="quiz"] .option:last-child {
     transform: scale(1.14);
   }
 }
+
+/* Optional: größere Displays — falls du die Peripherie-Kreisbdeckung erweitern willst */
+@media (min-width: 1200px) {
+  .profile-image img {
+    max-width: 480px;
+  }
+  .option {
+    /* Desktop: Inline styles from JS bestimmen Größe; dies ist nur ein Safeguard */
+    max-width: 80px;
+    max-height: 80px;
+  }
+}
+
+/* Ende der Datei */
