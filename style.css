@@ -1,3 +1,8 @@
+/* =========================
+   style.css — komplette Version
+   (Basisstyles + Mobile-Fixes für Fragenblöcke)
+   ========================= */
+
 /* Basis-Layout */
 :root {
   --bg: #f7f7f8;
@@ -124,7 +129,7 @@ h2 {
   color: var(--muted);
 }
 
-/* options */
+/* options container */
 .options {
   display: flex;
   gap: 10px;
@@ -155,16 +160,6 @@ h2 {
   box-shadow: 0 6px 18px rgba(211, 47, 47, 0.18);
 }
 
-/* scale labels for each question (left/right) */
-.scale-labels-question {
-  display: flex;
-  justify-content: space-between;
-  color: var(--muted);
-  font-size: 0.95rem;
-  margin-top: 6px;
-  padding: 0 6px;
-}
-
 /* Result */
 .final-letters {
   font-size: 2rem;
@@ -192,12 +187,14 @@ h2 {
   justify-content: center;
   margin-top: 8px;
 }
-/* if you place an <img> inside, make it responsive */
+/* responsive image styling (angepasst - du kannst Werte ändern) */
 .profile-image img {
-  max-width: 220px;
+  max-width: 360px;
+  width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: 10px;
   display: block;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 /* dimensions explanation */
@@ -224,8 +221,8 @@ h2 {
 }
 
 /* --------------------------------------------------
-   Accessibility-friendly: native radio inputs still im DOM,
-   but visually hidden (keeps keyboard/screenreader support).
+   Accessibility-friendly: native radio inputs im DOM,
+   aber visuell verborgen (Screenreader & Tastatur erhalten).
    -------------------------------------------------- */
 .option input {
   position: absolute !important;
@@ -253,3 +250,143 @@ h2 {
   outline: none;
   box-shadow: none;
 }
+
+/* --------------------------------------------------
+   Responsive-Fixes: nur für die Quiz/Fragen-Bereiche
+   Wir greifen gezielt nur bei Sektionen an, deren id mit "quiz" beginnt.
+   Dadurch bleiben Intro- und Ergebnis-Seite unverändert.
+   -------------------------------------------------- */
+
+@media (max-width: 640px) {
+  /* Reduziere Innenabstand in den Quiz-Karten etwas */
+  section[id^="quiz"] .screen,
+  section[id^="quiz"] {
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  /* Fragen kompakter und lesbarer machen */
+  section[id^="quiz"] .question {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  /* Frage-Text: kleiner, besser umbrechend */
+  section[id^="quiz"] .q-text {
+    font-size: 1rem;
+    line-height: 1.35;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  /*
+    Likert-Row: erlaubt Umbruch und zentriert die Elemente.
+    Wichtig: die left/right labels sitzen jetzt neben der Skala und müssen
+    auf kleinen Bildschirmen weniger Platz einnehmen.
+  */
+  section[id^="quiz"] .scale-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap; /* Erlaubt Umbruch der Optionen auf mehrere Zeilen */
+  }
+
+  /* Labels links/rechts: kleiner, mehrbreitiger, umbrechbar */
+  section[id^="quiz"] .scale-left-label,
+  section[id^="quiz"] .scale-right-label {
+    width: auto; /* flexibel */
+    max-width: 36%;
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--muted);
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  /* Optionscontainer: erlaubt Umbruch */
+  section[id^="quiz"] .options {
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+
+  /* Kreise: Wir begrenzen die max-width / max-height, damit Inline-Styles
+     vom JS nicht zu groß wirken auf kleinen Displays.
+     max-width / max-height beeinflussen sogar Inline width/height durch CSS constraints. */
+  section[id^="quiz"] .option {
+    /* Verbessert Touch-Bedienbarkeit durch Mindestgröße, aber verhindert zu große Kreise */
+    min-width: 28px;
+    min-height: 28px;
+    max-width: 48px; /* Kappe die Breite */
+    max-height: 48px; /* Kappe die Höhe */
+    width: auto !important; /* erlaubt max-width Anwendung */
+    height: auto !important;
+    margin: 4px;
+    border-width: 2px;
+  }
+
+  /* Falls du die Radius-Stufen mit transform verwendest, reduzieren wir die Extreme */
+  section[id^="quiz"] .option:first-child,
+  section[id^="quiz"] .option:last-child {
+    transform: scale(1.35);
+  }
+  section[id^="quiz"] .option:nth-child(2),
+  section[id^="quiz"] .option:nth-last-child(2) {
+    transform: scale(1.15);
+  }
+  section[id^="quiz"] .option:nth-child(3),
+  section[id^="quiz"] .option:nth-last-child(3) {
+    transform: scale(1.05);
+  }
+
+  /* Labels unterhalb der Skala (link/rechts) - falls zusätzlich benötigt */
+  section[id^="quiz"] .scale-labels-question {
+    display: none; /* wir nutzen nur die neben der Skala stehenden Labels */
+  }
+
+  /* Aktionen/Buttons: Platzsparender, nebeneinander aber responsiv */
+  section[id^="quiz"] .actions {
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  section[id^="quiz"] .actions .btn {
+    min-width: 100px;
+    padding: 10px 12px;
+  }
+}
+
+/* Extra small screens: nochmals feinjustieren */
+@media (max-width: 400px) {
+  section[id^="quiz"] .q-text {
+    font-size: 0.95rem;
+  }
+  section[id^="quiz"] .scale-left-label,
+  section[id^="quiz"] .scale-right-label {
+    font-size: 0.82rem;
+    max-width: 44%;
+  }
+  section[id^="quiz"] .option {
+    max-width: 42px;
+    max-height: 42px;
+    min-width: 26px;
+    min-height: 26px;
+  }
+}
+
+/* Optional: größere Displays — leicht größere Kreise erlauben */
+@media (min-width: 1200px) {
+  .profile-image img {
+    max-width: 480px;
+  }
+  .option {
+    /* Desktop: Inline Styles from JS bestimmen Größe — hier nur ein maximalwert */
+    max-width: 80px;
+    max-height: 80px;
+  }
+}
+
+/* Ende der Datei */
