@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html lang="de">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-t-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Politischer Persönlichkeitstest</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main class="container">
-      <!-- Intro Screen -->
       <section id="intro" class="screen active">
         <h1>Herzlich Willkommen zum politischen Persönlichkeitstest</h1>
         <button id="startBtn" class="btn btn-red">Start</button>
         <h1>Erstellt von: Linke Liste / SDS Mainz</h1>
       </section>
 
-      <!-- Fragenblock 1 -->
       <section id="quiz-1" class="screen">
         <h2>Fragenblock 1</h2>
         <form
@@ -36,7 +34,6 @@
         </form>
       </section>
 
-      <!-- Fragenblock 2 -->
       <section id="quiz-2" class="screen">
         <h2>Fragenblock 2</h2>
         <form
@@ -57,7 +54,6 @@
         </form>
       </section>
 
-      <!-- Fragenblock 3 -->
       <section id="quiz-3" class="screen">
         <h2>Fragenblock 3</h2>
         <form
@@ -78,7 +74,6 @@
         </form>
       </section>
 
-      <!-- Fragenblock 4 -->
       <section id="quiz-4" class="screen">
         <h2>Fragenblock 4</h2>
         <form
@@ -99,7 +94,20 @@
         </form>
       </section>
 
-      <!-- Ergebnis Screen -->
+      <section id="tiebreaker" class="screen">
+        <h2>Entscheidungsfragen</h2>
+        <p>
+          Bei einigen Dimensionen gab es ein Unentschieden. Bitte beantworte die
+          folgenden Fragen, um dein Ergebnis zu ermitteln.
+        </p>
+        <div id="tiebreaker-questions" class="questions"></div>
+        <div class="actions">
+          <button id="showFinalResultBtn" type="button" class="btn btn-red">
+            Endergebnis anzeigen
+          </button>
+        </div>
+      </section>
+
       <section id="result" class="screen">
         <h2>Dein Ergebnis:</h2>
         <div id="finalLetters" class="final-letters">----</div>
@@ -107,7 +115,6 @@
 
         <div id="resultDetails" class="result-details"></div>
 
-        <!-- Bildplatzhalter (du legst selber das <img> hier ein, zentriert) -->
         <div id="profileImage" class="profile-image" aria-hidden="true"></div>
 
         <div class="dimensions-explain">

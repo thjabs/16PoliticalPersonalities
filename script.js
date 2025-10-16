@@ -83,7 +83,34 @@ const blocks = [
   },
 ];
 
-// Ergebnisprofile (alle 16) inklusive Bild-Pfad (jpg in Ordner "Bilder")
+// NEU: Definition der Tiebreaker-Fragen
+const tiebreakerQuestions = {
+  0: {
+    question:
+      "Würdest du die nächsten 10 Jahre entweder alleine wohnen oder in einer Fünfer-WG leben?",
+    left: { label: "Alleine", letter: "A" },
+    right: { label: "Fünfer-WG", letter: "O" },
+  },
+  1: {
+    question:
+      "Würdest du in deinem Garten entweder einen Baum selbst pflanzen und ihm beim wachsen zusehen oder einen bereits ausgewachsenen Baum einpflanzen?",
+    left: { label: "Selbst pflanzen", letter: "R" },
+    right: { label: "Ausgewachsenen Baum einpflanzen", letter: "F" },
+  },
+  2: {
+    question: "Macht dir Denkarbeit oder Handarbeit mehr Spaß?",
+    left: { label: "Denkarbeit", letter: "T" },
+    right: { label: "Handarbeit", letter: "P" },
+  },
+  3: {
+    question:
+      "Der Favorit der Liga spielt gegen den Underdog. Auf welches Team setzt du?",
+    left: { label: "Favorit", letter: "R" },
+    right: { label: "Underdog", letter: "U" },
+  },
+};
+
+// Ergebnisprofile
 const resultProfiles = {
   ORTU: {
     title:
@@ -113,7 +140,6 @@ const resultProfiles = {
     text: "Es ist ein harter Kampf, dem du dir vollends bewusst bist. Und genau deswegen bist du bereit für die Drecksarbeit, das was eben getan werden muss. Doch pass ja auf, nicht das langfristige Ziel aus den Augen zu verlieren.",
     image: "Bilder/JosefStalinORPR.jpg",
   },
-
   OFPU: {
     title:
       "Organisiert, Reformistisch, Praxis, Utopist*in — Der*Die Langfristige",
@@ -131,7 +157,7 @@ const resultProfiles = {
   OFPR: {
     title:
       "Organisiert, Reformistisch, Praxis, Realist*in — Der*Die im Hier und Jetzt",
-    persons: ["Heidi Reichninnek", "Bernie Sanders", "Michail Gorbatschow"],
+    persons: ["Heidi Reichinnek", "Bernie Sanders", "Michail Gorbatschow"],
     text: "Du weißt die Grenzen deines Handels. Jetzt sitzt du im Parlament, doch was ist möglich? Die einen mögen dich eine*n Karrierist* nennen, doch die anderen wissen von deinen ehrlichen Zielen, nämlich einer besseren Gesellschaft, die du sofort angehen möchtest, nicht irgendwann.",
     image: "Bilder/HeidiReichinnekOFPR.jpg",
   },
@@ -142,7 +168,6 @@ const resultProfiles = {
     text: "Ist eine systematische Veränderung über das Parlament möglich? Du hast lange daran geglaubt, doch die letzten Jahre haben dir das Gegenteil bewiesen. Jetzt musst du dich entscheiden: Stillstand oder Revolution?",
     image: "Bilder/FFFOFTR.jpg",
   },
-
   ARTR: {
     title:
       "Alleingänger*in, Revolutionär, Theorie, Realist*in — Der*Die Stubenhocker*in",
@@ -171,7 +196,6 @@ const resultProfiles = {
     text: "Immer wieder siehst du hoffnungsvolle Menschen auf Demonstrationen. Doch nach der Demo gehen sie nach Hause und nichts ändert sich. Aber nicht mit dir! Mit deinen eigen erstellen Flyern, die über revolutionäre Praxis handeln und ab sofort auf jeder Demo verteilt werden, versuchst du die anderen von der Sache zu überzeugen. Doch wann überzeugst du dich selbst und organisierst dich?",
     image: "Bilder/PunkBandARPU.jpg",
   },
-
   AFPR: {
     title:
       "Alleingänger*in, Reformistisch, Praxis, Realist*in — Der*Die mit den Bauschmerzen",
@@ -208,6 +232,9 @@ const finalLetters = document.getElementById("finalLetters");
 const finalMessage = document.getElementById("finalMessage");
 const resultDetails = document.getElementById("resultDetails");
 const profileImage = document.getElementById("profileImage");
+const showFinalResultBtn = document.getElementById("showFinalResultBtn");
+
+let finalLetterResults = []; // Globale Variable für die Ergebnisse
 
 // show / hide screens
 function showScreen(id) {
@@ -231,15 +258,12 @@ document.addEventListener("click", (e) => {
   const next = e.target.closest(".btn-next");
   if (back) {
     const target = back.dataset.target;
-    if (target) {
-      showScreen(target);
-    }
+    if (target) showScreen(target);
   }
   if (next) {
     const nextId = next.dataset.next;
     if (nextId === "result") {
-      const valid = validateAllAnswered();
-      if (!valid) {
+      if (!validateAllAnswered()) {
         alert(
           "Bitte beantworte alle Fragen in allen Blöcken, bevor du abschließt."
         );
@@ -269,7 +293,37 @@ restartBtn.addEventListener("click", () => {
   showScreen("intro");
 });
 
-// render a block (index)
+// Event Listener für den neuen Button auf der Tiebreaker-Seite
+showFinalResultBtn.addEventListener("click", () => {
+  // Gehe durch die Tiebreaker-Fragen und update die Ergebnisse
+  const tiebreakerQuestionsContainer = document.getElementById(
+    "tiebreaker-questions"
+  );
+  const questions = tiebreakerQuestionsContainer.querySelectorAll(".question");
+  let allAnswered = true;
+
+  questions.forEach((q) => {
+    const blockIndex = parseInt(q.dataset.block, 10);
+    const selected = q.querySelector('input[type="radio"]:checked');
+
+    if (selected) {
+      const selectedLetter = selected.value;
+      finalLetterResults[blockIndex] = selectedLetter;
+    } else {
+      allAnswered = false;
+    }
+  });
+
+  if (!allAnswered) {
+    alert("Bitte beantworte alle Entscheidungsfragen.");
+    return;
+  }
+
+  // Zeige das finale Ergebnis an
+  displayFinalResult(finalLetterResults.join(""));
+});
+
+// render a block
 function renderBlock(blockIndex) {
   const block = blocks[blockIndex];
   const container = document.getElementById(`questions-${blockIndex + 1}`);
@@ -278,14 +332,10 @@ function renderBlock(blockIndex) {
   block.questions.forEach((qText, qIdx) => {
     const isLast = qIdx === block.questions.length - 1;
     const optionCount = isLast ? 6 : 7;
-    const leftLabel =
-      isLast && block.lastQuestionLabels
-        ? block.lastQuestionLabels.left
-        : "Ich stimme zu";
-    const rightLabel =
-      isLast && block.lastQuestionLabels
-        ? block.lastQuestionLabels.right
-        : "Ich stimme nicht zu";
+    const leftLabel = isLast ? block.lastQuestionLabels.left : "Ich stimme zu";
+    const rightLabel = isLast
+      ? block.lastQuestionLabels.right
+      : "Ich stimme nicht zu";
 
     const qWrap = document.createElement("div");
     qWrap.className = "question";
@@ -309,13 +359,13 @@ function renderBlock(blockIndex) {
     `;
     container.appendChild(qWrap);
 
-    // click listeners
     qWrap.querySelectorAll(".option").forEach((opt) => {
       opt.addEventListener("click", () => {
         const name = opt.getAttribute("data-name");
         const parent = opt.closest(".question");
-        const group = parent.querySelectorAll(`.option[data-name="${name}"]`);
-        group.forEach((o) => o.classList.remove("selected"));
+        parent
+          .querySelectorAll(`.option[data-name="${name}"]`)
+          .forEach((o) => o.classList.remove("selected"));
         opt.classList.add("selected");
         const input = parent.querySelector(
           `input[name="${name}"][value="${opt.dataset.value}"]`
@@ -326,11 +376,11 @@ function renderBlock(blockIndex) {
   });
 }
 
-// render HTML for options with size scaling (optionCount: 7 or 6)
+// render HTML for options
 function renderOptionsHtml(blockIndex, qIdx, optionCount = 7) {
   let html = "";
   const name = `b${blockIndex}q${qIdx}`;
-  const center = (optionCount - 1) / 2; // 3 for 7, 2.5 for 6
+  const center = (optionCount - 1) / 2;
   for (let i = 0; i < optionCount; i++) {
     const dist = Math.abs(i - center);
     const mul = 1 + (MAX_MULT - 1) * (dist / center);
@@ -344,75 +394,118 @@ function renderOptionsHtml(blockIndex, qIdx, optionCount = 7) {
   return html;
 }
 
-// validate all answered: each block each question must have checked input
+// validate all answered
 function validateAllAnswered() {
   for (let b = 0; b < blocks.length; b++) {
     for (let q = 0; q < blocks[b].questions.length; q++) {
-      const sel = document.querySelector(`input[name="b${b}q${q}"]:checked`);
-      if (!sel) return false;
+      if (!document.querySelector(`input[name="b${b}q${q}"]:checked`))
+        return false;
     }
   }
   return true;
 }
 
-// Compute scores for each block and determine letters
+// Compute scores
 function computeAndShowResults() {
   const letters = [];
   for (let b = 0; b < blocks.length; b++) {
     const block = blocks[b];
     let scorePrimary = 0;
     let scoreSecondary = 0;
-    const qCount = block.questions.length; // 7
 
-    for (let q = 0; q < qCount; q++) {
-      const name = `b${b}q${q}`;
-      const sel = document.querySelector(`input[name="${name}"]:checked`);
+    for (let q = 0; q < block.questions.length; q++) {
+      const sel = document.querySelector(`input[name="b${b}q${q}"]:checked`);
       const val = parseInt(sel.value, 10);
-      const isLast = q === qCount - 1;
+      const isLast = q === block.questions.length - 1;
+
       if (!isLast) {
-        // 7-option logic: center index = 3
         if (q <= 2) {
           if (val < CENTER_7) scorePrimary += POINTS_7[val];
           else if (val > CENTER_7) scoreSecondary += POINTS_7[val];
         } else {
-          // q 3..5 inverted
           if (val < CENTER_7) scoreSecondary += POINTS_7[val];
           else if (val > CENTER_7) scorePrimary += POINTS_7[val];
         }
       } else {
-        // special 6-option (no middle). left/right mapping: left->primary, right->secondary for q7
-        // indices 0..5 mapped to POINTS_6
-        if (val <= 2) {
-          // left side (0,1,2)
-          scorePrimary += POINTS_6[val];
-        } else {
-          // right side (3,4,5)
-          scoreSecondary += POINTS_6[val];
-        }
+        if (val <= 2) scorePrimary += POINTS_6[val];
+        else scoreSecondary += POINTS_6[val];
       }
     }
-
     if (scorePrimary > scoreSecondary) letters.push(block.primary);
     else if (scoreSecondary > scorePrimary) letters.push(block.secondary);
     else letters.push("X");
   }
 
-  // If any X present -> undetermined result
-  if (letters.includes("X")) {
-    finalLetters.textContent = letters.join("");
-    finalMessage.textContent =
-      "Es konnte kein Ergebnis ermittelt werden. Versuche den Test noch mal!";
-    resultDetails.innerHTML = "";
-    profileImage.innerHTML = "";
-    showScreen("result");
-    return;
-  }
+  finalLetterResults = [...letters]; // Speichere das Ergebnis global
 
-  const code = letters.join("");
+  // NEUE LOGIK: Prüfe auf "X"
+  if (finalLetterResults.includes("X")) {
+    renderTiebreakerScreen(finalLetterResults);
+    showScreen("tiebreaker");
+  } else {
+    displayFinalResult(finalLetterResults.join(""));
+  }
+}
+
+// NEU: rendert den Tiebreaker-Screen
+function renderTiebreakerScreen(letters) {
+  const container = document.getElementById("tiebreaker-questions");
+  container.innerHTML = "";
+
+  letters.forEach((letter, index) => {
+    if (letter === "X") {
+      const tb = tiebreakerQuestions[index];
+      const qWrap = document.createElement("div");
+      qWrap.className = "question";
+      // data-block speichert den Index des Blocks für später
+      qWrap.dataset.block = index;
+      qWrap.innerHTML = `
+        <div class="q-text">${tb.question}</div>
+        <div class="scale">
+          <div class="scale-row">
+            <div class="scale-left-label">${escapeHtml(tb.left.label)}</div>
+            <div class="options" role="radiogroup" aria-label="${escapeHtml(
+              tb.question
+            )}">
+              <label class="option" data-name="tb${index}" style="width:50px;height:50px;">
+                <input type="radio" name="tb${index}" value="${
+        tb.left.letter
+      }" />
+              </label>
+              <label class="option" data-name="tb${index}" style="width:50px;height:50px;">
+                <input type="radio" name="tb${index}" value="${
+        tb.right.letter
+      }" />
+              </label>
+            </div>
+            <div class="scale-right-label">${escapeHtml(tb.right.label)}</div>
+          </div>
+        </div>
+      `;
+      container.appendChild(qWrap);
+    }
+  });
+
+  // Event listeners für die neuen Optionen
+  container.querySelectorAll(".option").forEach((opt) => {
+    opt.addEventListener("click", () => {
+      const name = opt.getAttribute("data-name");
+      const parent = opt.closest(".question");
+      parent
+        .querySelectorAll(`.option[data-name="${name}"]`)
+        .forEach((o) => o.classList.remove("selected"));
+      opt.classList.add("selected");
+      const input = opt.querySelector(`input[type="radio"]`);
+      if (input) input.checked = true;
+    });
+  });
+}
+
+// NEU: Funktion zur Anzeige des finalen Ergebnisses (ausgelagert)
+function displayFinalResult(code) {
   finalLetters.textContent = code;
   finalMessage.textContent = "";
 
-  // lookup profile
   const profile = resultProfiles[code];
   let html = "";
   if (profile) {
@@ -430,11 +523,8 @@ function computeAndShowResults() {
     )}</strong><p>Beschreibung folgt.</p></div>`;
   }
 
-  // Bild anzeigen (falls vorhanden)
   profileImage.innerHTML = "";
   if (profile && profile.image) {
-    // Bild-Datei liegt im Ordner "Bilder/" und ist .jpg
-    // Beachte: Pfad ist case-sensitive auf GitHub Pages
     profileImage.innerHTML = `<img src="${profile.image}" alt="${escapeHtml(
       profile.title
     )}" loading="lazy">`;
@@ -444,7 +534,7 @@ function computeAndShowResults() {
   showScreen("result");
 }
 
-// small helper to avoid HTML injection (basic)
+// small helper to avoid HTML injection
 function escapeHtml(s) {
   if (!s) return "";
   return s
