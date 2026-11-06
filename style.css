@@ -1,26 +1,31 @@
 /* =========================
-   style.css — komplette Version
-   (Basisstyles + Mobile-Fixes für Fragenblöcke)
+   style.css
    ========================= */
 
-/* Basis-Layout */
 :root {
   --bg: #f7f7f8;
   --card: #ffffff;
   --text: #222;
   --accent: #d32f2f; /* roter Button */
   --muted: #6b6b6b;
+  --line: #e8e8e8;
   --radius: 12px;
-  --base-size: 34px; /* Basisgröße für mittleren Kreis */
-  --max-mult: 2; /* äußerster Kreis = 2x der Basis */
+
+  /* Likert-Skala */
+  --unit-max: 34px; /* größte Größe des mittleren Kreises */
+  --max-mult: 2; /* äußerster Kreis = 2x so groß wie der mittlere */
+  --opt-gap: 10px; /* Abstand zwischen den Kreisen */
 }
 
 * {
   box-sizing: border-box;
 }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 html,
 body {
-  height: 100%;
   margin: 0;
   font-family: Inter, system-ui, Arial, Helvetica, sans-serif;
   background: var(--bg);
@@ -50,7 +55,7 @@ body {
   display: flex;
 }
 
-/* Intro */
+/* Überschriften */
 h1 {
   font-size: 1.5rem;
   margin: 0;
@@ -60,26 +65,67 @@ h2 {
   margin: 0 0 8px 0;
   font-size: 1.15rem;
 }
+p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Intro */
+#intro {
+  align-items: center;
+  text-align: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+.credit {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--muted);
+}
 
 /* Buttons */
 .btn {
+  font: inherit;
+  font-weight: 600;
   background: #efefef;
+  color: var(--text);
   border: 0;
-  padding: 10px 18px;
+  padding: 12px 20px;
+  min-height: 44px;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  margin: 6px;
 }
 .btn:hover {
-  filter: brightness(0.98);
+  filter: brightness(0.96);
 }
-.btn-red {
+.btn-red,
+.btn-next {
   background: var(--accent);
   color: white;
 }
-.btn-back {
-  background: #f0f0f0;
+.btn-start {
+  min-width: 160px;
+  font-size: 1.1rem;
+}
+
+/* actions area */
+.actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* Fehlermeldung bei fehlenden Antworten */
+.form-error {
+  color: var(--accent);
+  font-weight: 600;
+  text-align: center;
+  margin-top: 12px;
+}
+.form-error[hidden] {
+  display: none;
 }
 
 /* Questions layout */
@@ -94,138 +140,117 @@ h2 {
 .question {
   padding: 14px;
   border-radius: 10px;
-  border: 1px solid #efefef;
+  border: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   gap: 10px;
+  scroll-margin: 24px;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.question.missing {
+  border-color: var(--accent);
+  background: #fff5f5;
 }
 .q-text {
   font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
-/* Scale (options area) */
+/* ---------- Likert-Skala ---------- */
 .scale {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding-top: 6px;
-  padding-bottom: 6px;
+  padding: 6px 0;
 }
 
-/* the option row */
+/* Desktop: Beschriftung links | Kreise | Beschriftung rechts */
 .scale-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  justify-content: center;
 }
-
-/* left/right placeholder (keine sichtbaren Elemente, aber Platzhalter) */
-.scale-left-label,
-.scale-right-label {
-  width: 120px;
+.scale-label {
+  flex: 0 0 120px;
   text-align: center;
   font-size: 0.9rem;
   color: var(--muted);
+  overflow-wrap: break-word;
 }
 
-/* options container */
 .options {
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
-  gap: 10px;
   align-items: center;
   justify-content: center;
+  gap: var(--opt-gap);
+  /* Die Kreise berechnen ihre Größe aus der Breite dieses Containers */
+  container-type: inline-size;
 }
 
-/* default option style - size controlled via inline style from JS */
+/*
+  Größe der Kreise:
+  --d     (aus JS) 0 = Mitte, 1 = ganz außen
+  --count (aus JS) Anzahl der Kreise
+  --dsum  (aus JS) Summe aller --d-Werte
+  Die Einheit wird so gewählt, dass alle Kreise sicher in eine Zeile passen,
+  aber nie größer als --unit-max werden.
+*/
 .option {
+  --f: calc(1 + (var(--max-mult) - 1) * var(--d, 0));
+  --unit: min(
+    var(--unit-max),
+    calc(
+      (100cqw - (var(--count) - 1) * var(--opt-gap) - 2px) /
+        (var(--count) + (var(--max-mult) - 1) * var(--dsum))
+    )
+  );
+  flex: 0 0 auto;
+  width: calc(var(--unit) * var(--f));
+  height: calc(var(--unit) * var(--f));
   border-radius: 50%;
-  border: 2px solid #dcdcdc;
+  border: 2px solid #cfcfcf;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   user-select: none;
-  transition: all 0.12s;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.12s, border-color 0.12s, box-shadow 0.12s;
   background: transparent;
-  color: inherit;
   position: relative;
 }
 
-/* selected option styling */
-.option.selected {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-  box-shadow: 0 6px 18px rgba(211, 47, 47, 0.18);
-}
-
-/* Result */
-.final-letters {
-  font-size: 2rem;
-  font-weight: 800;
-  text-align: center;
-  margin: 6px 0;
-}
-.final-message {
-  text-align: center;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-.result-details {
-  margin-top: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 4px;
-}
-
-/* image placeholder */
-.profile-image {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 8px;
-}
-/* responsive image styling (angepasst - du kannst Werte ändern) */
-.profile-image img {
-  max-width: 360px;
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  display: block;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-/* dimensions explanation */
-.dimensions-explain {
-  margin-top: 12px;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-.dimensions-explain hr {
-  margin: 12px 0;
-}
-
-/* actions area */
-.actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 8px;
-  gap: 8px;
-}
-@media (max-width: 640px) {
-  .final-letters {
-    font-size: 1.6rem;
+/* Fallback für sehr alte Browser ohne Container-Einheiten */
+@supports not (width: 1cqw) {
+  .option {
+    --unit: min(var(--unit-max), calc((100vw - 140px) / 11));
   }
 }
 
-/* --------------------------------------------------
-   Accessibility-friendly: native radio inputs im DOM,
-   aber visuell verborgen (Screenreader & Tastatur erhalten).
-   -------------------------------------------------- */
+@media (hover: hover) {
+  .option:hover {
+    border-color: var(--accent);
+  }
+}
+
+/* ausgewählte Option */
+.option.selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 6px 18px rgba(211, 47, 47, 0.18);
+}
+
+/* Tastatur-Fokus sichtbar machen */
+.option:has(input:focus-visible) {
+  outline: 3px solid rgba(211, 47, 47, 0.45);
+  outline-offset: 3px;
+}
+
+/* Native Radio-Buttons bleiben für Screenreader & Tastatur im DOM,
+   sind aber unsichtbar */
 .option input {
-  position: absolute !important;
+  position: absolute;
   width: 1px;
   height: 1px;
   margin: -1px;
@@ -237,284 +262,134 @@ h2 {
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
 }
 
-/* Remove native focus visuals on the hidden input */
-.option:focus,
-.option:focus-visible,
-.option input:focus,
-.option input:focus-visible {
-  outline: none;
-  box-shadow: none;
+/* ---------- Ergebnis ---------- */
+.final-letters {
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+  margin: 6px 0;
+  letter-spacing: 0.05em;
+}
+.final-message {
+  text-align: center;
+  color: var(--muted);
+}
+.final-message:empty {
+  display: none;
+}
+.result-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px;
+}
+.profile-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-image:empty {
+  display: none;
+}
+.profile-image img {
+  max-width: 360px;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+.dimensions-explain {
+  color: var(--muted);
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dimensions-explain hr {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 6px 0 12px;
 }
 
-/* --------------------------------------------------
-   Responsive-Fixes: nur für die Quiz/Fragen-Bereiche
-   Wir greifen gezielt nur bei Sektionen an, deren id mit "quiz" beginnt.
-   Dadurch bleiben Intro- und Ergebnis-Seite unverändert.
-   -------------------------------------------------- */
-
-@media (max-width: 640px) {
-  /* Reduziere Innenabstand in den Quiz-Karten etwas */
-  section[id^="quiz"] .screen,
-  section[id^="quiz"] {
-    padding: 16px;
-    box-sizing: border-box;
-  }
-
-  /* Fragen kompakter und lesbarer machen */
-  section[id^="quiz"] .question {
-    padding: 10px;
-    gap: 8px;
-  }
-
-  /* Frage-Text: kleiner, besser umbrechend */
-  section[id^="quiz"] .q-text {
-    font-size: 1rem;
-    line-height: 1.35;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    hyphens: auto;
-  }
-
-  /*
-    Likert-Row: erlaubt Umbruch und zentriert die Elemente.
-    Wichtig: die left/right labels sitzen jetzt neben der Skala und müssen
-    auf kleinen Bildschirmen weniger Platz einnehmen.
-  */
-  section[id^="quiz"] .scale-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap; /* Erlaubt Umbruch der Optionen auf mehrere Zeilen */
-  }
-
-  /* Labels links/rechts: kleiner, mehrbreitiger, umbrechbar */
-  section[id^="quiz"] .scale-left-label,
-  section[id^="quiz"] .scale-right-label {
-    width: auto; /* flexibel */
-    max-width: 36%;
-    text-align: center;
-    font-size: 0.88rem;
-    color: var(--muted);
-    white-space: normal;
-    word-break: break-word;
-  }
-
-  /* Optionscontainer: erlaubt Umbruch */
-  section[id^="quiz"] .options {
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    max-width: 100%;
-  }
-
-  /* Kreise: Wir begrenzen die max-width / max-height, damit Inline-Styles
-     vom JS nicht zu groß wirken auf kleinen Displays.
-     max-width / max-height beeinflussen sogar Inline width/height durch CSS constraints. */
-  section[id^="quiz"] .option {
-    /* Verbessert Touch-Bedienbarkeit durch Mindestgröße, aber verhindert zu große Kreise */
-    min-width: 28px;
-    min-height: 28px;
-    max-width: 48px; /* Kappe die Breite */
-    max-height: 48px; /* Kappe die Höhe */
-    width: auto !important; /* erlaubt max-width Anwendung */
-    height: auto !important;
-    margin: 4px;
-    border-width: 2px;
-  }
-
-  /* Falls du die Radius-Stufen mit transform verwendest, reduzieren wir die Extreme */
-  section[id^="quiz"] .option:first-child,
-  section[id^="quiz"] .option:last-child {
-    transform: scale(1.35);
-  }
-  section[id^="quiz"] .option:nth-child(2),
-  section[id^="quiz"] .option:nth-last-child(2) {
-    transform: scale(1.15);
-  }
-  section[id^="quiz"] .option:nth-child(3),
-  section[id^="quiz"] .option:nth-last-child(3) {
-    transform: scale(1.05);
-  }
-
-  /* Labels unterhalb der Skala (link/rechts) - falls zusätzlich benötigt */
-  section[id^="quiz"] .scale-labels-question {
-    display: none; /* wir nutzen nur die neben der Skala stehenden Labels */
-  }
-
-  /* Aktionen/Buttons: Platzsparender, nebeneinander aber responsiv */
-  section[id^="quiz"] .actions {
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  section[id^="quiz"] .actions .btn {
-    min-width: 100px;
-    padding: 10px 12px;
-  }
-}
-
-/* Extra small screens: nochmals feinjustieren */
-@media (max-width: 400px) {
-  section[id^="quiz"] .q-text {
-    font-size: 0.95rem;
-  }
-  section[id^="quiz"] .scale-left-label,
-  section[id^="quiz"] .scale-right-label {
-    font-size: 0.82rem;
-    max-width: 44%;
-  }
-  section[id^="quiz"] .option {
-    max-width: 42px;
-    max-height: 42px;
-    min-width: 26px;
-    min-height: 26px;
-  }
-}
-
-/* Optional: größere Displays — leicht größere Kreise erlauben */
 @media (min-width: 1200px) {
   .profile-image img {
     max-width: 480px;
   }
-  .option {
-    /* Desktop: Inline Styles from JS bestimmen Größe — hier nur ein maximalwert */
-    max-width: 80px;
-    max-height: 80px;
-  }
 }
 
-/* Ende der Datei */
-/* ---------------------------
-   Mobile-fix (ersetzt/ergänzt)
-   GILT NUR für Quiz-Sektionen
-   --------------------------- */
+/* ---------- Handy ---------- */
 @media (max-width: 640px) {
-  /* kompaktere Karten */
-  section[id^="quiz"] {
-    padding: 14px;
-    box-sizing: border-box;
-  }
-  section[id^="quiz"] .question {
-    padding: 10px;
-    gap: 8px;
-    overflow: visible; /* wir kontrollieren Größen, clipping vermeiden */
+  :root {
+    --max-mult: 1.6; /* Unterschied der Kreise etwas kleiner, damit alle gut tippbar sind */
+    --opt-gap: 6px;
   }
 
-  /* Frage-Text: sicher umbrechen */
-  section[id^="quiz"] .q-text {
+  .container {
+    padding: 12px;
+    align-items: flex-start;
+  }
+  .screen {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+  #intro {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+  h1 {
+    font-size: 1.3rem;
+  }
+  .final-letters {
+    font-size: 1.6rem;
+  }
+
+  .question {
+    padding: 12px;
+    gap: 8px;
+  }
+  .q-text {
     font-size: 1rem;
-    line-height: 1.35;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    hyphens: auto;
   }
 
-  /* Skalareihe: drei Spalten (links / mitte / rechts) in Prozent aufteilen */
-  section[id^="quiz"] .scale-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Platzverteilung sauber */
-    gap: 8px;
-    flex-wrap: nowrap;
+  /* Kreise über die volle Breite in EINER Zeile,
+     Beschriftungen darunter links und rechts */
+  .scale-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "opts  opts"
+      "left  right";
+    column-gap: 12px;
+    row-gap: 8px;
+    max-width: 460px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .options {
+    grid-area: opts;
+    justify-content: space-between;
+    min-height: 1px;
+  }
+  .scale-label {
+    font-size: 0.85rem;
+    line-height: 1.3;
+  }
+  .scale-left-label {
+    grid-area: left;
+    text-align: left;
+  }
+  .scale-right-label {
+    grid-area: right;
+    text-align: right;
   }
 
-  /* Labels links/rechts: feste Basis, umbrechbar */
-  section[id^="quiz"] .scale-left-label,
-  section[id^="quiz"] .scale-right-label {
-    flex: 0 0 18%; /* jeweils 18% der Breite */
-    max-width: 18%;
-    text-align: center;
-    font-size: 0.86rem;
-    color: var(--muted);
-    white-space: normal;
-    word-break: break-word;
-  }
-
-  /* Options: darf den verbleibenden Platz einnehmen, aber nicht mehr */
-  section[id^="quiz"] .options {
-    flex: 1 1 64%; /* nimmt ca. 64% der Zeile ein */
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-    max-width: 64%;
-  }
-
-  /* KLARE KAPPUNG der Option-Größen (überschreibt inline width/height) */
-  /* Wir setzen eine responsive feste Größe via clamp() + !important, damit JS-Styles nicht ausreißen */
-  section[id^="quiz"] .option {
-    box-sizing: border-box;
-    flex: 0 0 auto;
-    min-width: 26px;
-    min-height: 26px;
-    /* clamp(min, preferred, max) sorgt für saubere Skalierung auf verschiedenen Geräten */
-    width: clamp(30px, 8vw, 44px) !important;
-    height: clamp(30px, 8vw, 44px) !important;
-    max-width: 44px !important;
-    max-height: 44px !important;
-    margin: 4px;
-    border-width: 2px;
-  }
-
-  /* Reduziere die zusätzlichen Skalen-Vergrößerungen am Rand, damit nichts übersteht */
-  section[id^="quiz"] .option:first-child,
-  section[id^="quiz"] .option:last-child {
-    transform: scale(1.18); /* moderat größer */
-    transform-origin: center;
-  }
-  section[id^="quiz"] .option:nth-child(2),
-  section[id^="quiz"] .option:nth-last-child(2) {
-    transform: scale(1.08);
-    transform-origin: center;
-  }
-  section[id^="quiz"] .option:nth-child(3),
-  section[id^="quiz"] .option:nth-last-child(3) {
-    transform: scale(1);
-    transform-origin: center;
-  }
-
-  /* Falls du zusätzlich das untere Label-Element hattest: verstecken wir es (Dubletten) */
-  section[id^="quiz"] .scale-labels-question {
-    display: none;
-  }
-
-  /* Buttons responsive */
-  section[id^="quiz"] .actions {
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  section[id^="quiz"] .actions .btn {
-    min-width: 100px;
-    padding: 10px 12px;
-  }
-}
-
-/* noch kleinere Geräte: Feinjustierungen */
-@media (max-width: 400px) {
-  section[id^="quiz"] .q-text {
-    font-size: 0.95rem;
-  }
-  section[id^="quiz"] .scale-left-label,
-  section[id^="quiz"] .scale-right-label {
-    font-size: 0.82rem;
-    max-width: 42%;
-  }
-  section[id^="quiz"] .option {
-    width: clamp(28px, 10vw, 40px) !important;
-    height: clamp(28px, 10vw, 40px) !important;
-    max-width: 40px !important;
-    max-height: 40px !important;
-  }
-  section[id^="quiz"] .option:first-child,
-  section[id^="quiz"] .option:last-child {
-    transform: scale(1.14);
+  .actions .btn {
+    flex: 1 1 0;
+    max-width: 220px;
   }
 }

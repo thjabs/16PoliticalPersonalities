@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
   <head>
-    <meta charset="utf-t-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Politischer Persönlichkeitstest</title>
     <link rel="stylesheet" href="style.css" />
@@ -9,13 +9,15 @@
   <body>
     <main class="container">
       <section id="intro" class="screen active">
-        <h1>Herzlich Willkommen zum politischen Persönlichkeitstest</h1>
-        <button id="startBtn" class="btn btn-red">Start</button>
-        <h1>Erstellt von: Linke Liste / SDS Mainz</h1>
+        <h1>Herzlich willkommen zum politischen Persönlichkeitstest</h1>
+        <button id="startBtn" type="button" class="btn btn-red btn-start">
+          Start
+        </button>
+        <p class="credit">Erstellt von: Linke Liste / SDS Mainz</p>
       </section>
 
       <section id="quiz-1" class="screen">
-        <h2>Fragenblock 1</h2>
+        <h2>Fragenblock 1 von 4</h2>
         <form
           id="form-1"
           class="quiz-form"
@@ -35,7 +37,7 @@
       </section>
 
       <section id="quiz-2" class="screen">
-        <h2>Fragenblock 2</h2>
+        <h2>Fragenblock 2 von 4</h2>
         <form
           id="form-2"
           class="quiz-form"
@@ -55,7 +57,7 @@
       </section>
 
       <section id="quiz-3" class="screen">
-        <h2>Fragenblock 3</h2>
+        <h2>Fragenblock 3 von 4</h2>
         <form
           id="form-3"
           class="quiz-form"
@@ -75,7 +77,7 @@
       </section>
 
       <section id="quiz-4" class="screen">
-        <h2>Fragenblock 4</h2>
+        <h2>Fragenblock 4 von 4</h2>
         <form
           id="form-4"
           class="quiz-form"
@@ -102,6 +104,9 @@
         </p>
         <div id="tiebreaker-questions" class="questions"></div>
         <div class="actions">
+          <button type="button" class="btn btn-back" data-target="quiz-4">
+            Zurück
+          </button>
           <button id="showFinalResultBtn" type="button" class="btn btn-red">
             Endergebnis anzeigen
           </button>
@@ -115,7 +120,7 @@
 
         <div id="resultDetails" class="result-details"></div>
 
-        <div id="profileImage" class="profile-image" aria-hidden="true"></div>
+        <div id="profileImage" class="profile-image"></div>
 
         <div class="dimensions-explain">
           <hr />
@@ -124,7 +129,8 @@
             (A)
           </p>
           <p>
-            <strong>2. Dimension:</strong> Revolution (R) oder Reformistisch (F)
+            <strong>2. Dimension:</strong> Revolutionär (R) oder Reformistisch
+            (F)
           </p>
           <p><strong>3. Dimension:</strong> Theorie (T) oder Praxis (P)</p>
           <p>
@@ -133,7 +139,7 @@
         </div>
 
         <div class="actions">
-          <button id="restartBtn" class="btn">Noch einmal</button>
+          <button id="restartBtn" type="button" class="btn">Noch einmal</button>
         </div>
       </section>
     </main>
