@@ -112,111 +112,111 @@ const tiebreakerQuestions = {
 const resultProfiles = {
   ORTU: {
     title:
-      "Organisiert, Revolutionär, Theorie, Utopist*in — Der*Die Theoriegetreue",
+      "Organisiert, Revolutionär, Theorie, Utopist*in - Der*Die Theoriegetreue",
     persons: ["Angela Davis"],
     text: "Du bist, was du liest. Unbeeindruckt von allem, was in unserer Welt passiert, weißt du, dass eine bessere Welt möglich ist. Deswegen sprichst und diskutierst du mit deinen Mitmenschen in und außerhalb der Gruppe, damit sie auch den Funken entwickeln, der dir einst verliehen wurde.",
     image: "Bilder/AngelaDavisORTU.jpg",
   },
   ORPU: {
     title:
-      "Organisiert, Revolutionär, Praxis, Utopist*in — Der*Die Dauerdemogänger*in",
+      "Organisiert, Revolutionär, Praxis, Utopist*in - Der*Die Dauerdemogänger*in",
     persons: ["Rosa Luxemburg", "Che Guevara", "Mao Zedong"],
     text: "Mit dir steht der Revolution praktisch nichts mehr im Weg! Unbeirrt von all den Steinen, die dir in den Weg gelegt werden, kämpfst du weiter für die Sache. Lass sie eines Tages wahr werden.",
     image: "Bilder/CheGuevaraORPU.jpg",
   },
   ORTR: {
     title:
-      "Organisiert, Revolutionär, Theorie, Realist*in — Der*Die Leitfadenentwickler*in",
+      "Organisiert, Revolutionär, Theorie, Realist*in - Der*Die Leitfadenentwickler*in",
     persons: ["Abdullah Öcalan"],
     text: "Du hast den großen Plan im Auge und erklärst deinen Genoss*innen, wie sie tagtäglich darauf hinarbeiten können. Als würdest du dich in einem Schachspiel befinden, denkst du schon über den nächsten Zug nach. Doch wie wird die Partie ausgehen?",
     image: "Bilder/AbdullahÖcalanORTR.jpg",
   },
   ORPR: {
     title:
-      "Organisiert, Revolutionär, Praxis, Realist*in — Der*Die mit dem harten Fell",
+      "Organisiert, Revolutionär, Praxis, Realist*in - Der*Die mit dem harten Fell",
     persons: ["Josef Stalin"],
     text: "Es ist ein harter Kampf, dessen du dir vollends bewusst bist. Und genau deswegen bist du bereit für die Drecksarbeit, das, was eben getan werden muss. Doch pass ja auf, nicht das langfristige Ziel aus den Augen zu verlieren.",
     image: "Bilder/JosefStalinORPR.jpg",
   },
   OFPU: {
     title:
-      "Organisiert, Reformistisch, Praxis, Utopist*in — Der*Die Langfristige",
+      "Organisiert, Reformistisch, Praxis, Utopist*in - Der*Die Langfristige",
     persons: ["Ines Schwerdtner"],
     text: "Du bist im Parlament. Endlich hast du es geschafft! Doch hier ist nicht Schluss: Langfristige Verankerung und größtmöglicher Druck auf die Regierung sind das Ziel. Und vielleicht hört es da nicht auf. Wirst du die Regierungsfrage stellen?",
     image: "Bilder/InesSchwerdtnerOFPU.jpg",
   },
   OFTU: {
     title:
-      "Organisiert, Reformistisch, Theorie, Utopist*in — Der*Die mit dem Plan",
+      "Organisiert, Reformistisch, Theorie, Utopist*in - Der*Die mit dem Plan",
     persons: ["Eduard Bernstein"],
     text: "Jede Aufgabe muss auf ein Ziel hinarbeiten. Nichts passiert einfach so. Du willst deine Träume greifbar machen und entwickelst deswegen eine Strategie, auf die deine Genoss*innen zurückgreifen sollen. Doch hört es beim Parlament auf?",
     image: "Bilder/EduardBernsteinOFTU.jpg",
   },
   OFPR: {
     title:
-      "Organisiert, Reformistisch, Praxis, Realist*in — Der*Die im Hier und Jetzt",
+      "Organisiert, Reformistisch, Praxis, Realist*in - Der*Die im Hier und Jetzt",
     persons: ["Heidi Reichinnek", "Bernie Sanders", "Michail Gorbatschow"],
     text: "Du kennst die Grenzen deines Handelns. Jetzt sitzt du im Parlament, doch was ist möglich? Die einen mögen dich eine*n Karrierist*in nennen, doch die anderen wissen von deinen ehrlichen Zielen, nämlich einer besseren Gesellschaft, die du sofort angehen möchtest, nicht irgendwann.",
     image: "Bilder/HeidiReichinnekOFPR.jpg",
   },
   OFTR: {
     title:
-      "Organisiert, Reformistisch, Theorie, Realist*in — Der*Die Enttäuschte",
+      "Organisiert, Reformistisch, Theorie, Realist*in - Der*Die Enttäuschte",
     persons: ["FFF"],
     text: "Ist eine systematische Veränderung über das Parlament möglich? Du hast lange daran geglaubt, doch die letzten Jahre haben dir das Gegenteil bewiesen. Jetzt musst du dich entscheiden: Stillstand oder Revolution?",
     image: "Bilder/FFFOFTR.jpg",
   },
   ARTR: {
     title:
-      "Alleingänger*in, Revolutionär, Theorie, Realist*in — Der*Die Stubenhocker*in",
+      "Alleingänger*in, Revolutionär, Theorie, Realist*in - Der*Die Stubenhocker*in",
     persons: ["Wolfgang M. Schmitt", "Hasan Abi", "Antonio Gramsci"],
     text: "Du sitzt zuhause und denkst darüber nach, wie eine bessere Welt entstehen kann. Schnell schnappst du dir das Handy und fängst an, die ersten Videos zu drehen. Du hast das Wissen und nun ist es deine Mission, es zu den Menschen zu bringen!",
     image: "Bilder/WolfgangMSchmittARTR.jpg",
   },
   ARPR: {
     title:
-      "Alleingänger*in, Revolutionär, Praxis, Realist*in — Der*Die Saboteur*in",
+      "Alleingänger*in, Revolutionär, Praxis, Realist*in - Der*Die Saboteur*in",
     persons: ["Georg Elser"],
     text: "Alleine führst du den Kampf gegen die tagtäglichen Auswüchse der kapitalistischen Ordnung. ‘Selbst ist der Mann’ hieß es früher und so begibst du dich in risikoreiche Aktionen. Die Gefahr ist zu groß, um andere mitzunehmen, doch wann wirst du an dich selber denken?",
     image: "Bilder/GeorgElserARPR.jpg",
   },
   ARTU: {
     title:
-      "Alleingänger*in, Revolutionär, Theorie, Utopist*in — Der*Die Erschaffer*in",
+      "Alleingänger*in, Revolutionär, Theorie, Utopist*in - Der*Die Erschaffer*in",
     persons: ["Karl Marx", "Fabian Lehr", "99zu"],
     text: "Große Taten brauchen einen großen Geist. Du hast all die Theorie gelesen … nein … du bist die Theorie! Viele werden sich auf deine Ideen stützen, doch wann wirst du sie selbst versuchen umzusetzen?",
     image: "Bilder/KarlMarxARTU.jpg",
   },
   ARPU: {
     title:
-      "Alleingänger*in, Revolutionär, Praxis, Utopist*in — Der*Die Flyerverteiler*in",
+      "Alleingänger*in, Revolutionär, Praxis, Utopist*in - Der*Die Flyerverteiler*in",
     persons: ["Punk Band (Slime)"],
     text: "Immer wieder siehst du hoffnungsvolle Menschen auf Demonstrationen. Doch nach der Demo gehen sie nach Hause und nichts ändert sich. Aber nicht mit dir! Mit deinen selbst erstellten Flyern, die von revolutionärer Praxis handeln und ab sofort auf jeder Demo verteilt werden, versuchst du die anderen von der Sache zu überzeugen. Doch wann überzeugst du dich selbst und organisierst dich?",
     image: "Bilder/PunkBandARPU.jpg",
   },
   AFPR: {
     title:
-      "Alleingänger*in, Reformistisch, Praxis, Realist*in — Der*Die mit den Bauchschmerzen",
+      "Alleingänger*in, Reformistisch, Praxis, Realist*in - Der*Die mit den Bauchschmerzen",
     persons: ["Luisa Neubauer"],
     text: "Du fragst dich selbst manchmal, ob dein Weg die Lösung ist. Zwar kann deine Stimme Gehör finden, doch was verändert sie? Wirst du deine wahren politischen Ziele jemals erreichen?",
     image: "Bilder/LuisaNeubauerAFPR.jpg",
   },
   AFTR: {
     title:
-      "Alleingänger*in, Reformistisch, Theorie, Realist*in — Der*Die Naive",
+      "Alleingänger*in, Reformistisch, Theorie, Realist*in - Der*Die Naive",
     persons: ["Rezo"],
     text: "Du hast gelesen, dass das Grundgesetz kein Wirtschaftssystem festlegt. Nun bist du voller Euphorie und verkündest ein mögliches Ende des Kapitalismus. Doch in deinem Inneren weißt du, dass ein, zwei Gesetze nicht das Ende des Kapitalismus bringen werden. Was bedeutet das für dich?",
     image: "Bilder/RezoAFTR.jpg",
   },
   AFPU: {
-    title: "Alleingänger*in, Reformistisch, Praxis, Utopist*in — Der Sisyphos",
+    title: "Alleingänger*in, Reformistisch, Praxis, Utopist*in - Der Sisyphos",
     persons: ["Greta Thunberg"],
     text: "Du weißt es und dennoch gibst du nicht auf! Sie da oben hören nicht auf dich, die Zwänge sind systematisch und dennoch versuchst du die Aufmerksamkeit auf dich zu lenken, damit sich endlich etwas ändert. Wie weit bist du bereit, dafür zu gehen?",
     image: "Bilder/GretaThunbergAFPU.jpg",
   },
   AFTU: {
     title:
-      "Alleingänger*in, Reformistisch, Theorie, Utopist*in — Der*Die Zurückhaltende",
+      "Alleingänger*in, Reformistisch, Theorie, Utopist*in - Der*Die Zurückhaltende",
     persons: ["Alle progressiven Influencer*innen (Papaplatte)"],
     text: "Du hast das Richtige gelesen, vielleicht ist es auch nur ein Bauchgefühl von dir. Irgendetwas muss sich ändern! Doch es passiert nicht. Hast du den Mut, die Probleme laut auszusprechen?",
     image: "Bilder/PapaplatteAFTU.jpg",
