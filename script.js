@@ -75,7 +75,7 @@ const blocks = [
     primary: "U",
     secondary: "R",
     lastQuestionLabels: {
-      left: "Ich bin eine*r von ihnen!",
+      left: "Ich bin einer von ihnen!",
       right: "Sie wissen es",
     },
   },
@@ -198,7 +198,7 @@ const resultProfiles = {
     title:
       "Alleingänger*in, Reformistisch, Praxis, Realist*in — Der*Die mit den Bauchschmerzen",
     persons: ["Luisa Neubauer"],
-    text: "Du fragst dich selbst manchmal, ob dein Weg die Lösung ist. Zwar kann deine Stimme Gehör finden, doch was verändert sie? Wird sie deine wahren politischen Ziele jemals erreichen?",
+    text: "Du fragst dich selbst manchmal, ob dein Weg die Lösung ist. Zwar kann deine Stimme Gehör finden, doch was verändert sie? Wirst du deine wahren politischen Ziele jemals erreichen?",
     image: "Bilder/LuisaNeubauerAFPR.jpg",
   },
   AFTR: {
